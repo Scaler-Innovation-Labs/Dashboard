@@ -11,10 +11,10 @@
     "db:push": "drizzle-kit push",
     "db:pull": "drizzle-kit introspect",
     "db:migrate": "drizzle-kit migrate",
-    "db:rollback": "drizzle-kit migrate",
+    "db:rollback": "drizzle-kit rollback",
     "db:studio": "drizzle-kit studio",
     "db:reset": "pnpm run db:drop && pnpm run db:push && pnpm run db:migrate",
-    "db:drop": "drizzle-kit drop:pg",
+    "db:drop": "drizzle-kit drop",
     "prepare": "husky"
   },
   "dependencies": {
