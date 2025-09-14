@@ -1,9 +1,8 @@
-export default function LoginPage() {
+export default function Page() {
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen py-2">
-            <h1 className="text-4xl font-bold">
-                Dashboard
-            </h1>
+        <div className="p-4">
+            <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+            <p>Welcome to the dashboard. Please select your role to proceed.</p>
         </div>
-    )
+    );
 }
