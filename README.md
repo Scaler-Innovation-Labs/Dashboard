@@ -14,6 +14,73 @@
 
 The SST Students Dashboard is a web application for SST students to access their academic information and campus resources in one place. It provides a personalized dashboard, results/grades, announcements, and quick links to essential services, with secure authentication and a responsive UI. Built with Next.js and TypeScript, styled with Tailwind CSS, and managed with pnpm, the project focuses on speed, accessibility, and ease of contribution.
 
+## Project Structure
+
+```
+Dashboard/
+├── src/
+│   ├── app/
+│   │   ├── (app)/
+│   │   │   └── dashboard/
+│   │   │       ├── admin/
+│   │   │       ├── faculty/
+│   │   │       ├── student/
+│   │   │       ├── layout.tsx
+│   │   │       └── page.tsx
+│   │   ├── (auth)/
+│   │   │   └── login/
+│   │   ├── globals.css
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── components/
+│   │   └── ui/
+│   ├── conf/
+│   ├── db/
+│   │   ├── drizzle/
+│   │   ├── index.ts
+│   │   ├── migerate.ts
+│   │   └── schema.ts
+│   ├── hook/
+│   ├── lib/
+│   ├── model/
+│   ├── provider/
+│   ├── schema/
+│   ├── types/
+│   └── utils/
+├── public/
+├── commitlint.config.js
+├── components.json
+├── drizzle.config.ts
+├── eslint.config.mjs
+├── next-env.d.ts
+├── next.config.ts
+├── package.json
+├── pnpm-lock.yaml
+├── postcss.config.mjs
+├── tsconfig.json
+└── README.md
+```
+
+**Key Directories Explained:**
+
+- **`src/app/`** - Next.js App Router pages and layouts
+  - `(app)/` - Protected dashboard routes
+  - `(auth)/` - Authentication pages
+- **`src/components/`** - Reusable UI components
+  - `ui/` - shadcn/ui components
+- **`src/db/`** - Database configuration and schemas
+  - `drizzle/` - Migration files
+- **`src/lib/`** - Utility functions and configurations
+- **`src/schema/`** - Zod validation schemas
+- **`src/types/`** - TypeScript type definitions
+- **`src/utils/`** - Helper functions
+- **`public/`** - Static assets (images, icons)
+
+- Keep components in `src/components/`
+- Database schemas in `src/db/schema.ts`
+- Utilities in `src/lib/` and `src/utils/`
+- Types in `src/types/`
+
 ## Tech Stack
 
 - Framework : Next.js

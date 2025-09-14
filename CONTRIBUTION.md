@@ -185,13 +185,6 @@ pnpm db:drop
 - Use proper prop types and interfaces
 - Follow React best practices (hooks, functional components)
 
-### File Structure
-
-- Keep components in `src/components/`
-- Database schemas in `src/db/schema.ts`
-- Utilities in `src/lib/` and `src/utils/`
-- Types in `src/types/`
-
 ## Pull Request Process
 
 ### Before Submitting a PR
