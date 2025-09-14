@@ -18,112 +18,58 @@ The SST Students Dashboard is a web application for SST students to access their
 
 - Framework : Next.js
 - Language : TypeScript
+- Database : Postgres
+- ORM : Drizzle
 - Styling : Tailwind CSS
+- UI Library : shadcn-ui
+- Data Validator : Zod
 - Icons : Lucide Icons
 - Package Manager : pnpm
 - Linting : ESLint 9
 
-## Installation Steps (with pnpm)
+## Getting Started
 
-- **Clone the repo in your local**
-    ```bash
-    git clone https://github.com/Scaler-Innovation-Labs/Dashboard
-    ```
-- **Then install pnpm in your machine**
+Ready to contribute or set up the project locally? Check out our detailed setup guide:
 
-    - **macOS**
-        - Using Homebrew (recommended):  
-            ```bash
-            brew install pnpm
-            ```
+**[View Contribution Guide](./CONTRIBUTION.md)**
 
-        - Using Corepack :  
-            ```bash
-            corepack enable 
-            corepack prepare pnpm@latest --activate
-            ```
+The contributing guide includes:
 
-        - Using npm (use latest nvm):  
-            ```bash
-            npm i -g pnpm
-            ```
+- Complete installation instructions
+- Development workflow
+- Database setup and management
+- Code standards and guidelines
+- Pull request process
+- Commit conventions
 
-    - **Windows**
-        - Using Corepack :  
-            ```bash
-            corepack enable
-            corepack prepare pnpm@latest --activate
-            ```
+## Quick Start
 
-        - Using Chocolatey :  
-            ```bash
-            choco install pnpm
-            ```
+**Prerequisites**: Node.js 18+, PostgreSQL, pnpm
 
-        - Using npm (use latest nvm):  
-            ```bash
-            npm i -g pnpm
-            ```
-
-## Running the Project (dev & build scripts)
+If you just want to get the project running quickly:
 
 ```bash
-    # Install dependencies
-    pnpm install
+# Clone the repository
+git clone https://github.com/Scaler-Innovation-Labs/Dashboard
+cd Dashboard
 
-    # Start development server (Turbopack)
-    pnpm dev
+# Install dependencies
+pnpm install
 
-    # Build production bundle (Turbopack)
-    pnpm build
+# Set up environment variables
+cp .env.example .env.local
+# Edit .env.local with your PostgreSQL database URL
 
-    # Start production server (build & start prod server)
-    pnpm start
+# Set up the database
+pnpm db:push
 
-    # Lint code
-    pnpm lint
+# Start development server
+pnpm dev
 ```
 
-## Contribution Guidelines
-
-### Getting Started
-1. **Read the Code of Conduct** - All contributors must follow our community standards
-2. **Install Properly** - Go through the installation process and prepare it to run on your machine
-
-### Development Workflow
-1. **Follow TypeScript strict mode** - No `any` types without explicit justification
-2. **Run linting** before committing:
-    ```bash
-    pnpm lint
-    ```
-3. **Fix ALL linting errors** - No warnings allowed
-4. **Test thoroughly** on multiple screen sizes and browsers (for UI changes)
-5. **Commit with conventional commits**:
-    ```bash
-    git commit -m "feat: add student grade calculation"
-    git commit -m "fix: resolve authentication redirect loop"
-    ```
-
-### Pull Request Requirements
-- **Minimum 1 reviewers** required for approval
-- **All checks must pass** (linting, tests, build)
-- **No merge conflicts** - rebase on latest main
-- **Clear PR description** with:
-    - What was changed and why
-    - Screenshots for any changes
-    - How well it has been tested
-- **Small, focused PRs** - One feature/fix per PR
-
-### Code Standards (Strict)
-- **TypeScript**: Strict mode enabled, no `any` types
-- **Styling**: Tailwind CSS classes only, no inline styles
-- **Components**: Must be reusable and documented
-
-### Commit Message Format
-
-Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`  
-Scopes: `auth`, `dashboard`, `ui`, `api`, `db`
+For detailed setup instructions, please refer to our [Contribution Guide](./CONTRIBUTION.md).
 
 ## License
+
 This project is licensed under the MIT License.  
 Copyright (c) 2025 Dashboard
