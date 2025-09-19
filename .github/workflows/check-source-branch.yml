@@ -10,6 +10,7 @@ on:
 
 jobs:
   check-branch:
+    name: Branch Rules Check
     runs-on: ubuntu-latest
     steps:
       # Rule: PRs to main must come only from staging
