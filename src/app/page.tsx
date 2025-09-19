@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
@@ -6,8 +6,8 @@ export default function Home() {
   const router = useRouter();
 
   const navigateToDashboard = () => {
-    router.push("/dashboard");
-  }
+    router.push("/sign-in");
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
@@ -19,5 +19,5 @@ export default function Home() {
         Go to Dashboard
       </Button>
     </div>
-  )
+  );
 }
