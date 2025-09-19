@@ -31,13 +31,13 @@ jobs:
           echo "✅ Only PRs from 'dev' → 'staging' are allowed."
           exit 1
 
-      # Rule: PRs to dev must come from feature/* or bugfix/*
+      # Rule: PRs to dev must come from feature/* or bugfix/* or chore/* or hotfix/* or fix/* 
       - name: Validate PR into dev
-        if: github.base_ref == 'dev' && startsWith(github.head_ref, 'feature/') == false && startsWith(github.head_ref, 'bugfix/') == false
+        if: github.base_ref == 'dev' && startsWith(github.head_ref, 'feature/') == false && startsWith(github.head_ref, 'bugfix/') == false && startsWith(github.head_ref, 'chore/') == false && startsWith(github.head_ref, 'hotfix/') == false && startsWith(github.head_ref, 'fix/') == false
         run: |
           echo "::error::❌ Invalid pull request."
           echo "Pull requests into 'dev' must come from feature branches."
-          echo "✅ Allowed branch names: 'feature/*' or 'bugfix/*'."
+          echo "✅ Allowed branch names: 'feature/*' or 'bugfix/*' or 'chore/*' or 'hotfix/*' or 'fix/*'."
           exit 1
 
       # Success Message
