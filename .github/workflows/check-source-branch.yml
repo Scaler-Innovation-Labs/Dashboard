@@ -1,4 +1,4 @@
-name: Check Source Branch
+name: Enforce Branch Rules
 
 on:
   pull_request:
@@ -6,19 +6,43 @@ on:
     branches:
       - main
       - staging
+      - dev
 
 jobs:
-  check_branch:
+  check-branch:
+    name: Branch Rules Check
     runs-on: ubuntu-latest
     steps:
-      - name: Check PR source branch for 'main'
+      # Rule: PRs to main must come only from staging
+      - name: Validate PR into main
         if: github.base_ref == 'main' && github.head_ref != 'staging'
         run: |
-          echo "::error::Pull requests to 'main' can only come from 'staging' branch."
+          echo "::error::❌ Invalid pull request."
+          echo "Pull requests into 'main' are restricted."
+          echo "✅ Only PRs from 'staging' → 'main' are allowed."
           exit 1
-      
-      - name: Check PR source branch for 'staging'
+
+      # Rule: PRs to staging must come only from dev
+      - name: Validate PR into staging
         if: github.base_ref == 'staging' && github.head_ref != 'dev'
         run: |
-          echo "::error::Pull requests to 'staging' can only come from 'dev' branch."
+          echo "::error::❌ Invalid pull request."
+          echo "Pull requests into 'staging' are restricted."
+          echo "✅ Only PRs from 'dev' → 'staging' are allowed."
           exit 1
+
+      # Rule: PRs to dev must come from feature/* or bugfix/* or chore/* or hotfix/* or fix/* 
+      - name: Validate PR into dev
+        if: github.base_ref == 'dev' && startsWith(github.head_ref, 'feature/') == false && startsWith(github.head_ref, 'bugfix/') == false && startsWith(github.head_ref, 'chore/') == false && startsWith(github.head_ref, 'hotfix/') == false && startsWith(github.head_ref, 'fix/') == false
+        run: |
+          echo "::error::❌ Invalid pull request."
+          echo "Pull requests into 'dev' must come from feature branches."
+          echo "✅ Allowed branch names: 'feature/*' or 'bugfix/*' or 'chore/*' or 'hotfix/*' or 'fix/*'."
+          exit 1
+
+      # Success Message
+      - name: Success Message
+        if: (github.base_ref == 'main' && github.head_ref == 'staging') || (github.base_ref == 'staging' && github.head_ref == 'dev') || (github.base_ref == 'dev' && (startsWith(github.head_ref, 'feature/') || startsWith(github.head_ref, 'bugfix/')))
+        run: |
+          echo "🎉 Branch validation successful!"
+          echo "This PR follows the branching rules correctly."
