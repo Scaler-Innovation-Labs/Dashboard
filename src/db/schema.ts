@@ -239,6 +239,7 @@ export const batchRelations = relations(batch, ({ many }) => ({
 
 export const degreesRelations = relations(degrees, ({ many }) => ({}));
 
+// doubt here
 export const subjectRelations = relations(subject, ({ many }) => ({
   termSubjects: many(termSubject),
 }));
@@ -281,6 +282,10 @@ export const termSubjectEnrollmentRelations = relations(
       relationName: "studentEnrollments",
     }),
     results: many(results),
+
+    attendanceRecords: many(attendance, {
+      relationName: "enrollementAttendance",
+    }),
   }),
 );
 
@@ -299,6 +304,31 @@ export const resultRelations = relations(results, ({ one }) => ({
   assessmentType: one(assessmentType, {
     fields: [results.assessmentTypeId],
     references: [assessmentType.id],
+  }),
+}));
+
+export const classesRelations = relations(classes, ({ one, many }) => ({
+  termSubject: one(termSubject, {
+    fields: [classes.termSubjectId],
+    references: [termSubject.id],
+  }),
+  attendanceRecords: many(attendance),
+}));
+
+export const attendanceRelations = relations(attendance, ({ one }) => ({
+  termSubjectEnrollment: one(termSubjectEnrollement, {
+    fields: [attendance.termSubjectEnrollementId],
+    references: [termSubjectEnrollement.id],
+    relationName: "enrollmentAttendance",
+  }),
+  student: one(users, {
+    fields: [attendance.studentId],
+    references: [users.id],
+    relationName: "studentAttendance",
+  }),
+  class: one(classes, {
+    fields: [attendance.classId],
+    references: [classes.id],
   }),
 }));
 
