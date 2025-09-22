@@ -8,7 +8,7 @@ import {
   real,
   boolean,
 } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 
 export const users = pgTable("user", {
   id: bigint("id", { mode: "bigint" }).primaryKey().generatedAlwaysAsIdentity(),
@@ -53,9 +53,10 @@ export const studentProfile = pgTable("studentProfile", {
   userId: bigint("userId", { mode: "bigint" })
     .notNull()
     .references(() => users.id),
-  degreeId: integer("degreeId")
+  degreeIds: integer("degreeIds")
+    .array()
     .notNull()
-    .references(() => degrees.id),
+    .default(sql`'{}'::integer[]`),
   // will be made many to one relation with studentProfile do this later as it is not a part of the schema
   batchId: bigint("batchId", { mode: "bigint" })
     .notNull()
@@ -200,6 +201,106 @@ export const attendance = pgTable("attendance", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().notNull(),
 });
+
+/*
+Writing the Relations for the schema
+
+*/
+
+export const userRelations = relations(users, ({ one, many }) => ({
+  studentProfile: one(studentProfile, {
+    fields: [users.id],
+    references: [studentProfile.userId],
+  }),
+  termSubjectsAsInstructor: many(termSubject, {
+    relationName: "instructorTermSubjects",
+  }),
+  termSubjecEnrollments: many(termSubjectEnrollement, {
+    relationName: "studentEnrollments",
+  }),
+  attendanceRecords: many(attendance, { relationName: "studentAttendance" }),
+}));
+
+export const studentProfileRelations = relations(studentProfile, ({ one }) => ({
+  user: one(users, {
+    fields: [studentProfile.userId],
+    references: [users.id],
+  }),
+  batch: one(batch, {
+    fields: [studentProfile.batchId],
+    references: [batch.id],
+  }),
+}));
+
+export const batchRelations = relations(batch, ({ many }) => ({
+  studentProfiles: many(studentProfile),
+  terms: many(term),
+}));
+
+export const degreesRelations = relations(degrees, ({ many }) => ({}));
+
+export const subjectRelations = relations(subject, ({ many }) => ({
+  termSubjects: many(termSubject),
+}));
+
+export const termRelations = relations(term, ({ one, many }) => ({
+  batch: one(batch, {
+    fields: [term.batchId],
+    references: [batch.id],
+  }),
+  termSubjects: many(termSubject),
+}));
+
+export const termSubjectRelations = relations(termSubject, ({ one, many }) => ({
+  term: one(term, {
+    fields: [termSubject.termId],
+    references: [term.id],
+  }),
+  subject: one(subject, {
+    fields: [termSubject.subjectId],
+    references: [subject.id],
+  }),
+  instructor: one(users, {
+    fields: [termSubject.instructorId],
+    references: [users.id],
+  }),
+  classes: many(classes),
+  enrollments: many(termSubjectEnrollement),
+}));
+
+export const termSubjectEnrollmentRelations = relations(
+  termSubjectEnrollement,
+  ({ one, many }) => ({
+    termSubject: one(termSubject, {
+      fields: [termSubjectEnrollement.termSubjectId],
+      references: [termSubject.id],
+    }),
+    student: one(users, {
+      fields: [termSubjectEnrollement.studentId],
+      references: [users.id],
+      relationName: "studentEnrollments",
+    }),
+    results: many(results),
+  }),
+);
+
+export const assessmentTypeRelations = relations(
+  assessmentType,
+  ({ many }) => ({
+    results: many(results),
+  }),
+);
+
+export const resultRelations = relations(results, ({ one }) => ({
+  termSubjectEnrollment: one(termSubjectEnrollement, {
+    fields: [results.termSubjectEnrollementId],
+    references: [termSubjectEnrollement.id],
+  }),
+  assessmentType: one(assessmentType, {
+    fields: [results.assessmentTypeId],
+    references: [assessmentType.id],
+  }),
+}));
 
 // Writing this for type safety while generating the schema and reading the data from the database
 
