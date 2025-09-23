@@ -200,7 +200,8 @@ import { ApiResponse, ApiError, HttpStatus } from "@/types/api";
 
 ```ts
 import { NextResponse } from "next/server";
-import { ApiResponse, HttpStatus } from "@/types/api";
+import { ApiResponse } from "@/types/api";
+import { HttpStatus } from "@/constants/HttpStatus";
 
 export async function GET() {
   const res = ApiResponse.success(HttpStatus.OK, "User fetched successfully", {
@@ -215,7 +216,8 @@ export async function GET() {
 
 ```ts
 import { NextResponse } from "next/server";
-import { ApiResponse, HttpStatus } from "@/types/api";
+import { ApiResponse } from "@/types/api";
+import { HttpStatus } from "@/constants/HttpStatus";
 
 export async function POST() {
   const res = ApiResponse.error(HttpStatus.BAD_REQUEST, "Validation failed", [

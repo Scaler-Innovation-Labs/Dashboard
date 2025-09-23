@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import {
   // ApiError,
-  ApiResponse,
-  HttpStatus,
+  ApiResponse
 } from "@/types/api";
+import { HttpStatus } from "@/constants/HttpStatus";
 
 export async function GET() {
   const response = ApiResponse.success(
