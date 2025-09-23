@@ -1,17 +1,17 @@
 import { NextResponse } from "next/server";
-import { 
-    // ApiError,
-    ApiResponse, 
-    HttpStatus 
+import {
+  // ApiError,
+  ApiResponse,
+  HttpStatus,
 } from "@/types/api";
 
 export async function GET() {
-    const response = ApiResponse.success(
-        HttpStatus.OK, 
-        "Health check successful",
-        {}
-    );
-    return NextResponse.json(response);
+  const response = ApiResponse.success(
+    HttpStatus.OK,
+    "Health check successful",
+    {},
+  );
+  return NextResponse.json(response, { status: response.statusCode });
 }
 
 // export async function GET() {
@@ -26,5 +26,5 @@ export async function GET() {
 //             }
 //         ]
 //     );
-//     return NextResponse.json(response);
+//     return NextResponse.json(response, { status: response.statusCode });
 // }
