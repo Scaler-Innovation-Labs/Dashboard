@@ -1,10 +1,23 @@
-import { GoogleOneTap } from "@clerk/nextjs";
+"use client";
+import { SignIn } from "@clerk/nextjs";
 
 export default function GoogleSignIn() {
   return (
     <div className="flex justify-center items-center min-h-screen">
-      <h1>This is the Authenction Page</h1>
-      <GoogleOneTap />
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold mb-4">Sign in to Dashboard</h1>
+          <p className="text-gray-600">Use your Google account to continue</p>
+        </div>
+        <SignIn
+          appearance={{
+            elements: {
+              formButtonPrimary: "bg-blue-600 hover:bg-blue-700",
+              footerActionLink: "text-blue-600 hover:text-blue-700",
+            },
+          }}
+        />
+      </div>
     </div>
   );
 }
