@@ -2,7 +2,12 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import type { ClerkMiddlewareAuth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
-const isPublicRoute = createRouteMatcher(["/", "/sign-in(.*)", "/api/(.*)"]);
+const isPublicRoute = createRouteMatcher([
+  "/",
+  "/sign-in(.*)",
+  "/api/(.*)",
+  "/api/auth/(.*)",
+]);
 
 const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
 const isInstructorRoute = createRouteMatcher(["/instructor(.*)"]);
@@ -12,6 +17,27 @@ export default clerkMiddleware(
   async (auth: ClerkMiddlewareAuth, req: NextRequest) => {
     try {
       const authObj = await auth();
+      if (req.nextUrl.pathname === "/") {
+        if (authObj.userId) {
+          const role = authObj.sessionClaims?.metadata?.role;
+          if (role) {
+            switch (role) {
+              case "admin":
+                return NextResponse.redirect(new URL("/admin", req.url));
+              case "instructor":
+                return NextResponse.redirect(new URL("/instructor", req.url));
+              case "student":
+                return NextResponse.redirect(new URL("/student", req.url));
+              default:
+                return NextResponse.redirect(new URL("/sign-in", req.url));
+            }
+          } else {
+            return NextResponse.redirect(new URL("/sign-in", req.url));
+          }
+        } else {
+          return NextResponse.next();
+        }
+      }
 
       if (isPublicRoute(req)) {
         return NextResponse.next();
@@ -19,25 +45,6 @@ export default clerkMiddleware(
 
       if (!authObj.userId) {
         return NextResponse.redirect(new URL("/sign-in", req.url));
-      }
-
-      if (req.nextUrl.pathname === "/") {
-        const role = authObj.sessionClaims?.metadata?.role;
-
-        if (role) {
-          switch (role) {
-            case "admin":
-              return NextResponse.redirect(new URL("/admin", req.url));
-            case "instructor":
-              return NextResponse.redirect(new URL("/instructor", req.url));
-            case "student":
-              return NextResponse.redirect(new URL("/student", req.url));
-            default:
-              return NextResponse.redirect(new URL("/sign-in", req.url));
-          }
-        } else {
-          return NextResponse.redirect(new URL("/sign-in", req.url));
-        }
       }
 
       const userRole = authObj.sessionClaims?.metadata?.role;

@@ -1,7 +1,17 @@
 "use client";
 import { SignIn } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function GoogleSignIn() {
+  const router = useRouter();
+
+  useEffect(() => {
+    fetch("/api/auth/user", {
+      method: "POST",
+    }).then((res) => res.json());
+  }, []);
+
   return (
     <div className="flex justify-center items-center min-h-screen">
       <div className="w-full max-w-md">
