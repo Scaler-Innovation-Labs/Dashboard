@@ -8,6 +8,7 @@ This contribution guide will help you get started with setting up the Dashboard 
 - [Development Workflow](#development-workflow)
 - [Database Management](#database-management-drizzle-scripts)
 - [Code Standards](#code-standards)
+- [API Response & Error Handling](#api-response--error-handling)
 - [Pull Request Process](#pull-request-process)
 - [Commit Guidelines](#commit-guidelines)
 
@@ -184,6 +185,101 @@ pnpm db:drop
 - **Must be reusable and documented**
 - Use proper prop types and interfaces
 - Follow React best practices (hooks, functional components)
+
+## API Response & Error Handling
+
+We use typed, consistent API responses across all endpoints via `ApiResponse<T>`, `ApiError`, and `HttpStatus` from `src/types/api.ts`.
+
+### Import
+
+```ts
+import { ApiResponse, ApiError, HttpStatus } from "@/types/api";
+```
+
+### Example of Using Success Response (2xx)
+
+```ts
+import { NextResponse } from "next/server";
+import { ApiResponse } from "@/types/api";
+import { HttpStatus } from "@/constants/HttpStatus";
+
+export async function GET() {
+  const res = ApiResponse.success(HttpStatus.OK, "User fetched successfully", {
+    id: "123",
+    name: "John Doe",
+  });
+  return NextResponse.json(res, { status: res.statusCode });
+}
+```
+
+### Example of Using Error Response (4xx/5xx)
+
+```ts
+import { NextResponse } from "next/server";
+import { ApiResponse } from "@/types/api";
+import { HttpStatus } from "@/constants/HttpStatus";
+
+export async function POST() {
+  const res = ApiResponse.error(HttpStatus.BAD_REQUEST, "Validation failed", [
+    {
+      code: "VALIDATION_ERROR",
+      message: "Email is required",
+      details: { field: "email" },
+    },
+  ]);
+  return NextResponse.json(res, { status: res.statusCode });
+}
+```
+
+### Rules & Guidelines
+
+- Always return `NextResponse.json(response, { status: response.statusCode })`.
+- Use `ApiResponse.success` for all 2xx; use `ApiResponse.error` for 4xx/5xx.
+- Prefer `HttpStatus` enum over raw numbers to avoid typos.
+
+### Standard Status Codes
+
+- **200 OK**: Successful response
+- **201 Created**: Resource created
+- **204 No Content**: Success with no response body
+- **400 Bad Request**: Invalid input/shape
+- **401 Unauthorized**: Auth failure
+- **403 Forbidden**: Permission failure
+- **404 Not Found**: Resource missing
+- **409 Conflict**: Duplicate/constraint conflict
+- **422 Unprocessable Entity**: Business rule/validation failure
+- **500 Internal Server Error**: Unexpected server error
+- **503 Service Unavailable**: Downstream service/database unavailable
+
+### Shape (for reference)
+
+Success:
+
+```json
+{
+  "success": true,
+  "statusCode": 200,
+  "message": "User fetched successfully",
+  "data": { "id": "123", "name": "John Doe" }
+}
+```
+
+Error:
+
+```json
+{
+  "success": false,
+  "statusCode": 400,
+  "message": "Validation failed",
+  "errors": [
+    {
+      "code": "VALIDATION_ERROR",
+      "message": "Email is required",
+      "details": { "field": "email" }
+    }
+  ]
+}
+```
 
 ## Pull Request Process
 
