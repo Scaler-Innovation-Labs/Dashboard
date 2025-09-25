@@ -20,6 +20,7 @@ Before setting up the project, ensure you have the following installed:
 - **Node.js 18 or higher** - [Download from nodejs.org](https://nodejs.org/)
 - **PostgreSQL** - Database server ([Download from postgresql.org](https://www.postgresql.org/download/))
 - **Git** - Version control system
+- **Docker** - Containerization platform to run PostgreSQL - [Download from docker.com](https://docs.docker.com/engine/install/)
 
 ### Step 1: Clone the Repository
 
@@ -78,7 +79,28 @@ We use pnpm as our package manager. Install it using one of the following method
 pnpm install
 ```
 
-### Step 4: Environment Setup
+### Step 4: Run PostgreSQL on Docker
+
+Pull the postgres image from docker hub:
+
+```bash
+# Pull Postgres Docker image
+docker pull postgres:15
+```
+
+Create a docker container with the postgres image:
+
+```bash
+# Run Postgres container with the following arguments
+docker run --name sst-dashboard-db \
+  -e POSTGRES_USER=admin \
+  -e POSTGRES_PASSWORD=admin \
+  -e POSTGRES_DB=sst_dashboard \
+  -p 5432:5432 \
+  -d postgres:15
+```
+
+### Step 5: Environment Setup
 
 Create a `.env.local` file in the root directory:
 
@@ -88,7 +110,13 @@ DATABASE_URL=your_postgresql_connection_string
 
 Replace `your_postgresql_connection_string` with your actual PostgreSQL connection string.
 
-### Step 5: Database Setup
+If you used Docker to run PostgreSQL database server, then your connection string will be as follows:
+
+```env
+DATABASE_URL=postgresql://admin:admin@localhost:5432/sst_dashboard
+```
+
+### Step 6: Database Setup
 
 ```bash
 # Generate migration files from schema
@@ -98,7 +126,7 @@ pnpm db:generate
 pnpm db:migrate
 ```
 
-### Step 6: Start Development Server
+### Step 7: Start Development Server
 
 ```bash
 pnpm dev
