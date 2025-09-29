@@ -4,13 +4,13 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function GoogleSignIn() {
-  const router = useRouter();
+  // const router = useRouter();
 
-  useEffect(() => {
-    fetch("/api/auth/user", {
-      method: "POST",
-    }).then((res) => res.json());
-  }, []);
+  // useEffect(() => {
+  //   fetch("/api/auth/user", {
+  //     method: "POST",
+  //   }).then((res) => res.json());
+  // }, []);
 
   return (
     <div className="flex justify-center items-center min-h-screen">

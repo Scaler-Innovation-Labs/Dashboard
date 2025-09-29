@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import { getUserRole } from "@/lib/mock-db";
+import { getRoleByEmail } from "@/lib/mock-db";
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "Email not found" }, { status: 404 });
     }
 
-    const role = getUserRole(email);
+    const role = getRoleByEmail(email);
     await client.users.updateUserMetadata(userId, {
       publicMetadata: { role: role },
     });

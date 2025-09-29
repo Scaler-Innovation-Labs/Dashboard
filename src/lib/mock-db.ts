@@ -8,6 +8,6 @@ export const currentUserRole: MockUser = {
   role: "student",
 };
 
-export const getUserRole = (email: string): MockUser["role"] => {
+export const getRoleByEmail = (email: string): MockUser["role"] => {
   return currentUserRole.role;
 };

@@ -1,13 +1,10 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import type { ClerkMiddlewareAuth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
+import { getRoleByEmail } from "@/lib/mock-db";
+import { clerkClient } from "@clerk/nextjs/server";
 
-const isPublicRoute = createRouteMatcher([
-  "/",
-  "/sign-in(.*)",
-  "/api/(.*)",
-  "/api/auth/(.*)",
-]);
+const isPublicRoute = createRouteMatcher(["/", "/sign-in(.*)", "/api/(.*)"]);
 
 const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
 const isInstructorRoute = createRouteMatcher(["/instructor(.*)"]);
@@ -17,9 +14,22 @@ export default clerkMiddleware(
   async (auth: ClerkMiddlewareAuth, req: NextRequest) => {
     try {
       const authObj = await auth();
+
       if (req.nextUrl.pathname === "/") {
         if (authObj.userId) {
-          const role = authObj.sessionClaims?.metadata?.role;
+          let role = authObj.sessionClaims?.metadata?.role;
+
+          if (!role) {
+            const client = await clerkClient();
+            const user = await client.users.getUser(authObj.userId);
+            const email = user.emailAddresses[0]?.emailAddress;
+            if (email) {
+              role = getRoleByEmail(email);
+              await client.users.updateUserMetadata(authObj.userId, {
+                publicMetadata: { role: role },
+              });
+            }
+          }
           if (role) {
             switch (role) {
               case "admin":
@@ -47,7 +57,17 @@ export default clerkMiddleware(
         return NextResponse.redirect(new URL("/sign-in", req.url));
       }
 
-      const userRole = authObj.sessionClaims?.metadata?.role;
+      let userRole = authObj.sessionClaims?.metadata?.role;
+
+      if (!userRole) {
+        const client = await clerkClient();
+        const user = await client.users.getUser(authObj.userId);
+        const email = user.emailAddresses[0]?.emailAddress;
+        if (email) {
+          userRole = getRoleByEmail(email);
+        }
+      }
+
       if (!userRole) {
         return NextResponse.redirect(new URL("/sign-in", req.url));
       }
@@ -55,11 +75,9 @@ export default clerkMiddleware(
       if (isAdminRoute(req) && userRole !== "admin") {
         return NextResponse.redirect(new URL("/sign-in", req.url));
       }
-
       if (isInstructorRoute(req) && userRole !== "instructor") {
         return NextResponse.redirect(new URL("/sign-in", req.url));
       }
-
       if (isStudentRoute(req) && userRole !== "student") {
         return NextResponse.redirect(new URL("/sign-in", req.url));
       }
