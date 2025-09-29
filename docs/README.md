@@ -17,7 +17,7 @@ The SST Students Dashboard is a web application for SST students to access their
 ## Project Structure
 
 ```
-Dashboard/
+
 ├── docs/
 │   ├── CONTRIBUTION.md
 │   └── README.md
@@ -25,30 +25,45 @@ Dashboard/
 ├── src/
 │   ├── app/
 │   │   ├── (app)/
-│   │   │   └── dashboard/
-│   │   │       ├── admin/
-│   │   │       ├── faculty/
-│   │   │       ├── student/
-│   │   │       ├── layout.tsx
-│   │   │       └── page.tsx
+│   │   │   ├── admin/
+│   │   │   │   └── dashboard/
+│   │   │   │       ├── layout.tsx      # Admin dashboard layout
+│   │   │   │       └── page.tsx        # Admin dashboard home
+│   │   │   │
+│   │   │   ├── student/
+│   │   │   │   └── dashboard/
+│   │   │   │       ├── layout.tsx      # Student dashboard layout
+│   │   │   │       └── page.tsx        # Student dashboard home
+│   │   │   │
+│   │   │   ├── faculty/
+│   │   │   │   └── dashboard/
+│   │   │   │       ├── layout.tsx      # Faculty dashboard layout
+│   │   │   │       └── page.tsx        # Faculty dashboard home
+│   │   │
 │   │   ├── (auth)/
 │   │   │   └── login/
 │   │   │       └── page.tsx
+│   │   │
 │   │   ├── api/
 │   │   │   └── healthcheck/
 │   │   │       └── route.ts
+│   │   │
 │   │   ├── globals.css
-│   │   ├── layout.tsx
-│   │   └── page.tsx
+│   │   ├── layout.tsx                  # Root layout
+│   │   └── page.tsx                    # Landing/Home page
+│   │
 │   ├── components/
 │   │   └── ui/
+│   │
 │   ├── conf/
 │   │   └── config.ts
+│   │
 │   ├── db/
 │   │   ├── drizzle/
 │   │   ├── index.ts
 │   │   ├── migrate.ts
 │   │   └── schema.ts
+│   │
 │   ├── hook/
 │   ├── lib/
 │   ├── model/
@@ -56,6 +71,7 @@ Dashboard/
 │   ├── schema/
 │   ├── types/
 │   └── utils/
+│
 ├── commitlint.config.js
 ├── components.json
 ├── drizzle.config.ts
