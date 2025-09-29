@@ -18,6 +18,10 @@ The SST Students Dashboard is a web application for SST students to access their
 
 ```
 Dashboard/
+├── docs/
+│   ├── CONTRIBUTION.md
+│   └── README.md
+├── public/
 ├── src/
 │   ├── app/
 │   │   ├── (app)/
@@ -29,16 +33,21 @@ Dashboard/
 │   │   │       └── page.tsx
 │   │   ├── (auth)/
 │   │   │   └── login/
+│   │   │       └── page.tsx
+│   │   ├── api/
+│   │   │   └── healthcheck/
+│   │   │       └── route.ts
 │   │   ├── globals.css
 │   │   ├── layout.tsx
 │   │   └── page.tsx
 │   ├── components/
 │   │   └── ui/
 │   ├── conf/
+│   │   └── config.ts
 │   ├── db/
 │   │   ├── drizzle/
 │   │   ├── index.ts
-│   │   ├── migerate.ts
+│   │   ├── migrate.ts
 │   │   └── schema.ts
 │   ├── hook/
 │   ├── lib/
@@ -47,22 +56,23 @@ Dashboard/
 │   ├── schema/
 │   ├── types/
 │   └── utils/
-├── public/
 ├── commitlint.config.js
 ├── components.json
 ├── drizzle.config.ts
 ├── eslint.config.mjs
-├── next-env.d.ts
 ├── next.config.ts
 ├── package.json
 ├── pnpm-lock.yaml
 ├── postcss.config.mjs
 ├── tsconfig.json
-└── README.md
+└── next-env.d.ts
 ```
 
 **Key Directories Explained:**
 
+- **`src/docs/`** - Documentation about project
+  - `CONTRIBUTION.md` - Guidelines for developers to read before contributing
+  - `README.md` - Details about the project
 - **`src/app/`** - Next.js App Router pages and layouts
   - `(app)/` - Protected dashboard routes
   - `(auth)/` - Authentication pages
@@ -80,6 +90,7 @@ Dashboard/
 - Database schemas in `src/db/schema.ts`
 - Utilities in `src/lib/` and `src/utils/`
 - Types in `src/types/`
+- Documentation files(.md) in `docs/`
 
 ## Tech Stack
 
