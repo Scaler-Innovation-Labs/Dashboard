@@ -1,34 +1,45 @@
 {
-  "id": "b891d522-1353-4558-b555-99ca39e8a489",
+  "id": "b413ca57-e43b-41ed-a64a-01e3ffad25e1",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.degrees": {
-      "name": "degrees",
+    "public.assessmentType": {
+      "name": "assessmentType",
       "schema": "",
       "columns": {
         "id": {
           "name": "id",
-          "type": "uuid",
+          "type": "integer",
           "primaryKey": true,
           "notNull": true,
-          "default": "gen_random_uuid()"
+          "identity": {
+            "type": "byDefault",
+            "name": "assessmentType_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
         },
-        "degree_name": {
-          "name": "degree_name",
+        "name": {
+          "name": "name",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "institution": {
-          "name": "institution",
-          "type": "text",
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "now()"
         },
-        "created_at": {
-          "name": "created_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -43,50 +54,101 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.user_degrees": {
-      "name": "user_degrees",
+    "public.attendance": {
+      "name": "attendance",
       "schema": "",
       "columns": {
-        "user_id": {
-          "name": "user_id",
-          "type": "uuid",
+        "id": {
+          "name": "id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "attendance_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "termSubjectEnrollementId": {
+          "name": "termSubjectEnrollementId",
+          "type": "bigint",
           "primaryKey": false,
           "notNull": true
         },
-        "degree_id": {
-          "name": "degree_id",
-          "type": "uuid",
+        "studentId": {
+          "name": "studentId",
+          "type": "bigint",
           "primaryKey": false,
           "notNull": true
+        },
+        "classId": {
+          "name": "classId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "attendanceStatus": {
+          "name": "attendanceStatus",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "endTime": {
+          "name": "endTime",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "user_degrees_user_id_users_id_fk": {
-          "name": "user_degrees_user_id_users_id_fk",
-          "tableFrom": "user_degrees",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "cascade"
+        "attendance_termSubjectEnrollementId_termSubjectEnrollement_id_fk": {
+          "name": "attendance_termSubjectEnrollementId_termSubjectEnrollement_id_fk",
+          "tableFrom": "attendance",
+          "tableTo": "termSubjectEnrollement",
+          "columnsFrom": ["termSubjectEnrollementId"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         },
-        "user_degrees_degree_id_degrees_id_fk": {
-          "name": "user_degrees_degree_id_degrees_id_fk",
-          "tableFrom": "user_degrees",
-          "tableTo": "degrees",
-          "columnsFrom": [
-            "degree_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "cascade"
+        "attendance_studentId_user_id_fk": {
+          "name": "attendance_studentId_user_id_fk",
+          "tableFrom": "attendance",
+          "tableTo": "user",
+          "columnsFrom": ["studentId"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "attendance_classId_classes_id_fk": {
+          "name": "attendance_classId_classes_id_fk",
+          "tableFrom": "attendance",
+          "tableTo": "classes",
+          "columnsFrom": ["classId"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -95,16 +157,776 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.users": {
-      "name": "users",
+    "public.batch": {
+      "name": "batch",
       "schema": "",
       "columns": {
         "id": {
           "name": "id",
-          "type": "uuid",
+          "type": "bigint",
           "primaryKey": true,
           "notNull": true,
-          "default": "gen_random_uuid()"
+          "identity": {
+            "type": "byDefault",
+            "name": "batch_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "endDate": {
+          "name": "endDate",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "MinPersonaldevCreditRequired": {
+          "name": "MinPersonaldevCreditRequired",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.classes": {
+      "name": "classes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "classes_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "duration": {
+          "name": "duration",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "classType": {
+          "name": "classType",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "termSubjectId": {
+          "name": "termSubjectId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "classes_termSubjectId_termSubject_id_fk": {
+          "name": "classes_termSubjectId_termSubject_id_fk",
+          "tableFrom": "classes",
+          "tableTo": "termSubject",
+          "columnsFrom": ["termSubjectId"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.degrees": {
+      "name": "degrees",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "degrees_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "degreeName": {
+          "name": "degreeName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "institution": {
+          "name": "institution",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "duration": {
+          "name": "duration",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.results": {
+      "name": "results",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "results_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "termSubjectEnrollementId": {
+          "name": "termSubjectEnrollementId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "assessmentTypeId": {
+          "name": "assessmentTypeId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "score": {
+          "name": "score",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "weightage": {
+          "name": "weightage",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "results_termSubjectEnrollementId_termSubjectEnrollement_id_fk": {
+          "name": "results_termSubjectEnrollementId_termSubjectEnrollement_id_fk",
+          "tableFrom": "results",
+          "tableTo": "termSubjectEnrollement",
+          "columnsFrom": ["termSubjectEnrollementId"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "results_assessmentTypeId_assessmentType_id_fk": {
+          "name": "results_assessmentTypeId_assessmentType_id_fk",
+          "tableFrom": "results",
+          "tableTo": "assessmentType",
+          "columnsFrom": ["assessmentTypeId"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.studentProfile": {
+      "name": "studentProfile",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "studentProfile_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "userId": {
+          "name": "userId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "degreeIds": {
+          "name": "degreeIds",
+          "type": "integer[]",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'::integer[]"
+        },
+        "batchId": {
+          "name": "batchId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "githubUsername": {
+          "name": "githubUsername",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "linkedinUsername": {
+          "name": "linkedinUsername",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "twitterUsername": {
+          "name": "twitterUsername",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "leetcodeUsername": {
+          "name": "leetcodeUsername",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "codeforcesUsername": {
+          "name": "codeforcesUsername",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "studentProfile_userId_user_id_fk": {
+          "name": "studentProfile_userId_user_id_fk",
+          "tableFrom": "studentProfile",
+          "tableTo": "user",
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "studentProfile_batchId_batch_id_fk": {
+          "name": "studentProfile_batchId_batch_id_fk",
+          "tableFrom": "studentProfile",
+          "tableTo": "batch",
+          "columnsFrom": ["batchId"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.subject": {
+      "name": "subject",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "subject_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "credits": {
+          "name": "credits",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "SubjectCode": {
+          "name": "SubjectCode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "SubjectSlug": {
+          "name": "SubjectSlug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.term": {
+      "name": "term",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "term_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "batchId": {
+          "name": "batchId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "startDate": {
+          "name": "startDate",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "endDate": {
+          "name": "endDate",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "term_batchId_batch_id_fk": {
+          "name": "term_batchId_batch_id_fk",
+          "tableFrom": "term",
+          "tableTo": "batch",
+          "columnsFrom": ["batchId"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.termSubject": {
+      "name": "termSubject",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "termSubject_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "termId": {
+          "name": "termId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "subjectId": {
+          "name": "subjectId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "instructorId": {
+          "name": "instructorId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "termSubject_termId_term_id_fk": {
+          "name": "termSubject_termId_term_id_fk",
+          "tableFrom": "termSubject",
+          "tableTo": "term",
+          "columnsFrom": ["termId"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "termSubject_subjectId_subject_id_fk": {
+          "name": "termSubject_subjectId_subject_id_fk",
+          "tableFrom": "termSubject",
+          "tableTo": "subject",
+          "columnsFrom": ["subjectId"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "termSubject_instructorId_user_id_fk": {
+          "name": "termSubject_instructorId_user_id_fk",
+          "tableFrom": "termSubject",
+          "tableTo": "user",
+          "columnsFrom": ["instructorId"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.termSubjectEnrollement": {
+      "name": "termSubjectEnrollement",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "termSubjectEnrollement_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "termSubjectId": {
+          "name": "termSubjectId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "studentId": {
+          "name": "studentId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "enrollementType": {
+          "name": "enrollementType",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hasCompletedSubject": {
+          "name": "hasCompletedSubject",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "attendance": {
+          "name": "attendance",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "grade": {
+          "name": "grade",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "score": {
+          "name": "score",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "termSubjectEnrollement_termSubjectId_termSubject_id_fk": {
+          "name": "termSubjectEnrollement_termSubjectId_termSubject_id_fk",
+          "tableFrom": "termSubjectEnrollement",
+          "tableTo": "termSubject",
+          "columnsFrom": ["termSubjectId"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "termSubjectEnrollement_studentId_user_id_fk": {
+          "name": "termSubjectEnrollement_studentId_user_id_fk",
+          "tableFrom": "termSubjectEnrollement",
+          "tableTo": "user",
+          "columnsFrom": ["studentId"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.user": {
+      "name": "user",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "user_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
         },
         "name": {
           "name": "name",
@@ -118,50 +940,20 @@
           "primaryKey": false,
           "notNull": true
         },
-        "phone_number": {
-          "name": "phone_number",
+        "phoneNumber": {
+          "name": "phoneNumber",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "emergency_phone_number": {
-          "name": "emergency_phone_number",
+        "profileUrl": {
+          "name": "profileUrl",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "profile_image": {
-          "name": "profile_image",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "github": {
-          "name": "github",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "linkedin": {
-          "name": "linkedin",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "twitter": {
-          "name": "twitter",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "leetcode": {
-          "name": "leetcode",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "codeforces": {
-          "name": "codeforces",
+        "emergencyPhoneNumber": {
+          "name": "emergencyPhoneNumber",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -173,15 +965,15 @@
           "notNull": true,
           "default": "'student'"
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -192,26 +984,25 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "users_email_unique": {
-          "name": "users_email_unique",
+        "user_email_unique": {
+          "name": "user_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         },
-        "users_phone_number_unique": {
-          "name": "users_phone_number_unique",
+        "user_phoneNumber_unique": {
+          "name": "user_phoneNumber_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "phone_number"
-          ]
+          "columns": ["phoneNumber"]
         },
-        "users_emergency_phone_number_unique": {
-          "name": "users_emergency_phone_number_unique",
+        "user_profileUrl_unique": {
+          "name": "user_profileUrl_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "emergency_phone_number"
-          ]
+          "columns": ["profileUrl"]
+        },
+        "user_emergencyPhoneNumber_unique": {
+          "name": "user_emergencyPhoneNumber_unique",
+          "nullsNotDistinct": false,
+          "columns": ["emergencyPhoneNumber"]
         }
       },
       "policies": {},

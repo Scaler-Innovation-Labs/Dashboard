@@ -17,29 +17,53 @@ The SST Students Dashboard is a web application for SST students to access their
 ## Project Structure
 
 ```
-Dashboard/
+
+├── docs/
+│   ├── CONTRIBUTION.md
+│   └── README.md
+├── public/
 ├── src/
 │   ├── app/
 │   │   ├── (app)/
-│   │   │   └── dashboard/
-│   │   │       ├── admin/
-│   │   │       ├── faculty/
-│   │   │       ├── student/
-│   │   │       ├── layout.tsx
-│   │   │       └── page.tsx
+│   │   │   ├── admin/
+│   │   │   │   └── dashboard/
+│   │   │   │       ├── layout.tsx      # Admin dashboard layout
+│   │   │   │       └── page.tsx        # Admin dashboard home
+│   │   │   │
+│   │   │   ├── student/
+│   │   │   │   └── dashboard/
+│   │   │   │       ├── layout.tsx      # Student dashboard layout
+│   │   │   │       └── page.tsx        # Student dashboard home
+│   │   │   │
+│   │   │   ├── faculty/
+│   │   │   │   └── dashboard/
+│   │   │   │       ├── layout.tsx      # Faculty dashboard layout
+│   │   │   │       └── page.tsx        # Faculty dashboard home
+│   │   │
 │   │   ├── (auth)/
 │   │   │   └── login/
+│   │   │       └── page.tsx
+│   │   │
+│   │   ├── api/
+│   │   │   └── healthcheck/
+│   │   │       └── route.ts
+│   │   │
 │   │   ├── globals.css
-│   │   ├── layout.tsx
-│   │   └── page.tsx
+│   │   ├── layout.tsx                  # Root layout
+│   │   └── page.tsx                    # Landing/Home page
+│   │
 │   ├── components/
 │   │   └── ui/
+│   │
 │   ├── conf/
+│   │   └── config.ts
+│   │
 │   ├── db/
 │   │   ├── drizzle/
 │   │   ├── index.ts
-│   │   ├── migerate.ts
+│   │   ├── migrate.ts
 │   │   └── schema.ts
+│   │
 │   ├── hook/
 │   ├── lib/
 │   ├── model/
@@ -47,22 +71,24 @@ Dashboard/
 │   ├── schema/
 │   ├── types/
 │   └── utils/
-├── public/
+│
 ├── commitlint.config.js
 ├── components.json
 ├── drizzle.config.ts
 ├── eslint.config.mjs
-├── next-env.d.ts
 ├── next.config.ts
 ├── package.json
 ├── pnpm-lock.yaml
 ├── postcss.config.mjs
 ├── tsconfig.json
-└── README.md
+└── next-env.d.ts
 ```
 
 **Key Directories Explained:**
 
+- **`src/docs/`** - Documentation about project
+  - `CONTRIBUTION.md` - Guidelines for developers to read before contributing
+  - `README.md` - Details about the project
 - **`src/app/`** - Next.js App Router pages and layouts
   - `(app)/` - Protected dashboard routes
   - `(auth)/` - Authentication pages
@@ -80,6 +106,7 @@ Dashboard/
 - Database schemas in `src/db/schema.ts`
 - Utilities in `src/lib/` and `src/utils/`
 - Types in `src/types/`
+- Documentation files(.md) in `docs/`
 
 ## Tech Stack
 
